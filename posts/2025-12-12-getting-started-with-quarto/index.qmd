@@ -1,0 +1,190 @@
+---
+title: "Getting started with Quarto"
+subtitle: "A walk-through of how I use Quarto"
+date: 2025-12-12
+date-modified: 2025-12-13 # Optional: shows "updated" date
+description: |
+    There's alot to Quarto and their docs can be overwhellming. 
+    This is not a replacement for that, rather an easy start up.
+# image: thumbnail.jpg
+# image-alt: ""
+categories: [Quarto, Tutorial]
+draft: false  # set to true for drafts (don't have it true while making live edits, will run into problems)
+---
+
+[Quarto](https://quarto.org/), an open-source scientific and high-quality technical publishing system built on [Pandoc](https://pandoc.org/), is currently the industry standard for open source technical publishing. 
+
+
+It combines narrative text and your code (Python, R, Julia etc.) into a single file. When *render* is ran (in editor or terminal), Quarto runs that code, captures the resulting graphs and tables, and weaves everything into a polished final product. 
+
+While it can generate static formats like PDFs, Word docs, or PowerPoint slides, its most powerful output is HTML. Quarto creates interactive web pages where readers can zoom in on charts, toggle code snippets on and off, and tab through data all within a standalone file that is easy to share or publish online.
+
+## Getting Started
+Quarto provides the installation guide in [Get Started](https://quarto.org/docs/get-started/) but the simplest method is to use the [Home Brew](https://formulae.brew.sh/) package manager in the CLI:
+
+``` bash
+brew install --cask quarto
+```
+
+Check if it is installed:
+``` bash
+quarto --version
+```
+
+There is a page on the quarto website that has steps on the process for [creating a blog](https://quarto.org/docs/websites/website-blog.html) but I recommend to use the documentation I have below for setting up the blog :) 
+
+To create a new blog project from the Terminal, go to a directory where you would like for the blog to reside. Once there, run this command:
+
+``` bash
+quarto create project blog quarto-blog
+```
+```
+Creating project at /home/danielle/GitHub/sites/quarto-blog:
+  - Created _quarto.yml
+  - Created index.qmd
+  - Created posts/welcome/index.qmd
+  - Created posts/post-with-code/index.qmd
+  - Created about.qmd
+  - Created styles.css
+  - Created posts/_metadata.yml
+```
+
+Here's a summary of the key files created within the starter blog project:
+
+| File                  | Description                |
+|:----------------------|:---------------------------|
+| `_quarto.yml`         | Quarto project file.       |
+| `index.qmd`           | Blog home page.            |
+| `about.qmd`           | Blog about page.           |
+| `posts/`              | Directory containing posts |
+| `posts/_metadata.yml` | Shared options for `posts` |
+| `styles.css`          | Custom CSS for website     |
+
+
+The command above creates the scaffolding needed for a simple blog in the `quarto-blog` sub-directory. Before we make any editing, it's best practice to add version control.
+
+```bash
+cd quarto_blog
+git init 
+git add .
+git commit -m "Initial commit: Quarto blog scaffold"
+```
+
+And for standard pratice, add `.gitignore`:
+```bash
+touch .gitignore
+```
+and copy and paste this into the `.gitignore` file:
+```bash
+# Quarto rendering output
+_site/
+.quarto/
+
+# Jupyter cache and checkpoints (if you ever use notebooks)
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# macOS junk
+.DS_Store
+```
+
+Why add `_site/` & `.quarto/`??
+
+- `_site/`: The default output directory where Quarto renders full static sites (HTML files, CSS, images, etc.) when `quarto render` or `quarto preview` is ran. Committing them to Git would:
+    - Create huge repositories with thousands of files.
+    - Lead to messy diffs and frequent merge conflicts (e.g., minor changes in source produce widespread changes in output HTML).
+    - Bloat history unnecessarily.
+- `.quarto/`: A hidden directory created by Quarto during rendering. It contains internal metadata, cached files, freeze data (for computational documents), and other temporary/build artifacts.
+    - Including them in Git would again cause bloat, unnecessary changes, and potential issues across different machines/environments.
+
+Now by using `quarto preview`, the blog can be rendered as a website. 
+
+```bash
+quarto preview
+```
+
+As edits are made and saved into `index.qmd` (or other files like `about.qmd`) the preview is automatically updated.
+
+## Creating a post
+All the posts that make up the contents of the blog are located in the `posts/` directory. An example of a layout can be seen as:
+```
+myblog/
+├── posts/                          ← ALL posts go here (this is mandatory)
+│   ├── 2024-12-25-christmas-post/  ← folder name is date followed by post title
+│   │   ├── index.qmd               ← the actual post file (must be named index.qmd or .md or .ipynb) 
+│   │   ├── thumbnail.jpg           ← optional but recommended
+│   │   └── image1.png
+│   ├── post-with-code/             ← the sample post that ships with the template
+│   │   ├── index.qmd
+│   │   └── image.jpg
+│   └── welcome/                    ← the sample post that ships with the template
+│       └── index.qmd
+├── _quarto.yml
+└── ...
+```
+
+The widely recommended (and commonly used) naming convention for the subdirectories is: `YYYY-MM-DD-post-title-slug`. In order the make a post in `post/`, follow these commands. 
+
+``` bash
+mkdir -p posts/2025-01-15-my-new-post        ← change into disired format: posts/YYYY-MM-DD-post-title-slug 
+touch posts/2025-01-15-my-new-post/index.qmd ← main content file 
+```
+
+Inside `index.qmd`, is where all the content of the post will reside. To control key aspects of how the post renders and appears in a post, you use YAML. There are two places where YAML is used to select the render options: `posts/_metadata.yml` and each `index.qmd`. 
+
+`posts/_metadata.yml` applies shared defaults to **all posts** in the `posts/` folder. (inherited by each `index.qmd`). Here is how my `posts/_metadata.yml` file looks like: 
+
+```yml
+# Shared metadata for all blog posts in this directory
+# Useful for defaults that apply to every post (e.g., freezing computations, default author)
+
+# freeze computational output (recommended for blogs with code to prevent re-execution issues)
+# (see https://quarto.org/docs/projects/code-execution.html#freeze)
+freeze: true
+
+# Enable banner style title blocks
+title-block-banner: true
+# title-block-banner-color: "#ffffff" # Optional: custom text color in the banner
+
+# Enable table of contents for all posts
+toc: true
+toc-title: Table of contents
+toc-location: right
+
+# Default author
+author:
+  - name: Justin Shaw
+    url: https://github.com/JustinShawAcademy # I don't have a website yet haha
+```
+
+There isn't much I add with the `_metadata.yml` file because I prefer having the flexibility of editing for each `index.qmd` file. Here is the YAML I used for this `index.qmd` post. Note that at the top of `index.qmd`, the YAML must be wrapped in `---` to run.
+
+```yml
+---
+title: "Getting started with Quarto"
+subtitle: "A walk-through of how I use Quarto"
+date: 2025-12-13
+date-modified: 2025-12-14  # Optional: shows "updated" date
+description: |
+    There's alot to Quarto and their docs can be overwhellming. 
+    This is not a replacement for that, rather an easy start up. 
+image: thumbnail.jpg
+# image-alt: ""
+categories: [Quarto, Tutorial]
+draft: true  # set to true for drafts
+---
+```
+
+:::{.column-screen-inset}
+![](img/post-banner.png)
+:::
+
+That's super clean :D
+
+- TODO:
+    - continue https://quarto.org/docs/websites/website-blog.html#posts-directory
+    - https://blog.djnavarro.net/posts/2022-04-20_porting-to-quarto/#inheriting-yaml-settings
+    - https://quarto.org/docs/websites/website-listings.html
+    - https://quarto.org/docs/output-formats/html-basics.html 
+

@@ -1,8 +1,21 @@
-# options specified here will apply to all posts in this folder
+# Shared metadata for all blog posts in this directory
+# Useful for defaults that apply to every post (e.g., freezing computations, default author)
 
-# freeze computational output
+# freeze computational output (recommended for blogs with code to prevent re-execution issues)
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)
 freeze: true
 
 # Enable banner style title blocks
 title-block-banner: true
+# title-block-banner-color: "#ffffff" # Optional: custom text color in the banner
+
+# Enable table of contents for all posts
+toc: true
+toc-title: Table of contents
+toc-location: right
+
+# Default author
+author:
+  - name: Justin Shaw
+    url: https://github.com/JustinShawAcademy 
+
