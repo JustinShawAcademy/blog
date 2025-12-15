@@ -1,0 +1,83 @@
+---
+title: "Getting started with Sketchybar"
+subtitle: "customizable menu status bar for macOS"
+date: 2025-12-13
+date-modified: 2025-12-14 # Optional: shows "updated" date
+description: |
+    It completely replaces the default macOS menu bar (the top bar) with a fully scriptable, 
+    dynamic bar written in plain sh (shell script) and configured via YAML/JSON.
+# image: thumbnail.jpg
+# image-alt: ""
+categories: [MacOS, Tutorial]
+draft: false  # set to true for drafts (don't have it true while making live edits, will run into problems)
+---
+
+I got my Mac lapot first year of university and have been using the same stock bar since. In this post, we're going to go over how I changed the top menu bar in a highly functional, beautiful, and dynamic tool. In this tutorial, [SketchyBar]() will provides us with all the customization we need.
+
+## Installation and Dependencies
+To install sketchbar, run these two commands. (This will be done with the homebrew package manager)
+```bash
+brew tap FelixKratz/formulae
+brew install sketchybar
+```
+
+After install sketchybar, we want to we want to copy the example configuration to our home directory. The code is given after we run `brew install sketchbar`. Here it is below:
+```bash
+mkdir -p ~/.config/sketchybar/plugins
+  cp /opt/homebrew/opt/sketchybar/share/sketchybar/examples/sketchybarrc ~/.config/sketchybar/sketchybarrc
+  cp -r /opt/homebrew/opt/sketchybar/share/sketchybar/examples/plugins/ ~/.config/sketchybar/plugins/
+  chmod +x ~/.config/sketchybar/plugins/*
+```
+
+Now from the home directory run:
+```bash
+cd .config
+cd sketcybar
+tree # put this is ran with homebrew in footer or margin
+```
+
+`/sketchybar` makes up the example config that we will be building off of:
+```
+.
+├── plugins
+│   ├── battery.sh
+│   ├── clock.sh
+│   ├── front_app.sh
+│   ├── space.sh
+│   └── volume.sh
+└── sketchybarrc
+2 directories, 6 files
+```
+
+We also need to install the font needed for sketchybar so that we may see the icons:
+```bash
+brew install --cask font-hack-nerd-font
+```
+
+We will also work with json information in our config so it make this easier we intall a json command line processor called `jq`:
+```bash
+brew install jq
+```
+
+Before we start up sketchy bar, we want to hide the stock apple menu bar.
+1. Open up `Control Center`
+2. Scroll down until you find "Automatically hide and show the menu bar"
+3. Select "Always"
+
+![](img/control-center.png)
+
+## Starting SketchyBar
+Now that we have SketchyBar and others installed, we simply run:
+```bash
+brew services start sketchybar
+```
+
+It's highly recommendend to use a tiling windows managing system like aerospace (there is also yabi or rectangle) while using sketchybar. If you do decide to use aerospace, there is some config we need to do so that the windows don't overlap sketchybar (add later) (5:20)
+
+
+### Sketchybarrc
+Right now, we're in `~/.config/sketchybar
+
+
+
+
